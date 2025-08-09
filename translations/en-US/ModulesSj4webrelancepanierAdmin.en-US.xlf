@@ -1,0 +1,103 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en-US" target-language="en-US" datatype="plaintext" original="file.ext">
+    <body>
+      <trans-unit id="display_name">
+        <source>SJ4WEB - Cart Reminder</source>
+        <target>SJ4WEB - Cart Reminder</target>
+      </trans-unit>
+      <trans-unit id="description">
+        <source>Automatically reminds customers about abandoned carts with optional discount codes and conversion tracking.</source>
+        <target>Automatically reminds customers about abandoned carts with optional discount codes and conversion tracking.</target>
+      </trans-unit>
+      <trans-unit id="SJ4WEB - Cart Reminder" resname="SJ4WEB - Cart Reminder">
+        <source>SJ4WEB - Cart Reminder</source>
+        <target>SJ4WEB - Cart Reminder</target>
+      </trans-unit>
+      <trans-unit id="Campaigns" resname="Campaigns">
+        <source>Campaigns</source>
+        <target>Campaigns</target>
+      </trans-unit>
+      <trans-unit id="Sent mails" resname="Sent mails">
+        <source>Sent mails</source>
+        <target>Sent mails</target>
+      </trans-unit>
+      <trans-unit id="Name" resname="Name">
+        <source>Name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="Status" resname="Status">
+        <source>Status</source>
+        <target>Status</target>
+      </trans-unit>
+      <trans-unit id="T1 (h)" resname="T1 (h)">
+        <source>T1 (h)</source>
+        <target>T1 (h)</target>
+      </trans-unit>
+      <trans-unit id="BR T1 (%)" resname="BR T1 (%)">
+        <source>BR T1 (%)</source>
+        <target>BR T1 (%)</target>
+      </trans-unit>
+      <trans-unit id="T2 (h)" resname="T2 (h)">
+        <source>T2 (h)</source>
+        <target>T2 (h)</target>
+      </trans-unit>
+      <trans-unit id="BR T2 (%)" resname="BR T2 (%)">
+        <source>BR T2 (%)</source>
+        <target>BR T2 (%)</target>
+      </trans-unit>
+      <trans-unit id="T3 (h)" resname="T3 (h)">
+        <source>T3 (h)</source>
+        <target>T3 (h)</target>
+      </trans-unit>
+      <trans-unit id="BR T3 (%)" resname="BR T3 (%)">
+        <source>BR T3 (%)</source>
+        <target>BR T3 (%)</target>
+      </trans-unit>
+      <trans-unit id="Cart reminder campaign" resname="Cart reminder campaign">
+        <source>Cart reminder campaign</source>
+        <target>Cart reminder campaign</target>
+      </trans-unit>
+      <trans-unit id="Campaign status" resname="Campaign status">
+        <source>Campaign status</source>
+        <target>Campaign status</target>
+      </trans-unit>
+      <trans-unit id="Draft" resname="Draft">
+        <source>Draft</source>
+        <target>Draft</target>
+      </trans-unit>
+      <trans-unit id="Active" resname="Active">
+        <source>Active</source>
+        <target>Active</target>
+      </trans-unit>
+      <trans-unit id="Archived" resname="Archived">
+        <source>Archived</source>
+        <target>Archived</target>
+      </trans-unit>
+      <trans-unit id="Delay T%i (hours)" resname="Delay T%i (hours)">
+        <source>Delay T%i (hours)</source>
+        <target>Delay T%i (hours)</target>
+      </trans-unit>
+      <trans-unit id="Enable BR for T%i" resname="Enable BR for T%i">
+        <source>Enable BR for T%i</source>
+        <target>Enable BR for T%i</target>
+      </trans-unit>
+      <trans-unit id="BR T%i (%)" resname="BR T%i (%)">
+        <source>BR T%i (%)</source>
+        <target>BR T%i (%)</target>
+      </trans-unit>
+      <trans-unit id="Mark as active" resname="Mark as active">
+        <source>Mark as active</source>
+        <target>Mark as active</target>
+      </trans-unit>
+      <trans-unit id="This campaign has already sent emails. You cannot set it to draft." resname="This campaign has already sent emails. You cannot set it to draft.">
+        <source>This campaign has already sent emails. You cannot set it to draft.</source>
+        <target>This campaign has already sent emails. You cannot set it to draft.</target>
+      </trans-unit>
+      <trans-unit id="Campaign must be in draft status to be marked as active." resname="Campaign must be in draft status to be marked as active.">
+        <source>Campaign must be in draft status to be marked as active.</source>
+        <target>Campaign must be in draft status to be marked as active.</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

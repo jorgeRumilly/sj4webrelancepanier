@@ -1,0 +1,12 @@
+[class="process-icon-force_send"] {
+    font-family: "FontAwesome", serif;
+}
+.process-icon-force_send_step1:after {
+    content:"\f003";
+}
+.process-icon-force_send_step2:after {
+    content:"\f003";
+}
+.process-icon-force_send_step3:after {
+    content:"\f003";
+}

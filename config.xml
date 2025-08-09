@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<module>
+    <name>sj4webrelancepanier</name>
+    <displayName>SJ4WEB - Relance Panier</displayName>
+    <version>1.0.0</version>
+    <author>SJ4WEB.FR</author>
+    <tab>emailing</tab>
+    <need_instance>0</need_instance>
+    <ps_versions_compliancy>
+        <min>8.0.0</min>
+        <max>8.99.99</max>
+    </ps_versions_compliancy>
+</module>
