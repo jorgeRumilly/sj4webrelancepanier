@@ -26,6 +26,7 @@ require_once _PS_MODULE_DIR_ . 'sj4webrelancepanier/classes/Sj4webRelancepanierS
 require_once _PS_MODULE_DIR_ . 'sj4webrelancepanier/classes/Sj4webRelancepanierCartFinder.php';
 require_once _PS_MODULE_DIR_ . 'sj4webrelancepanier/classes/Sj4webRelancepanierCampaign.php';
 require_once _PS_MODULE_DIR_ . 'sj4webrelancepanier/classes/Sj4webRelancepanierSender.php';
+
 class AdminSj4webRelancepanierSentController extends ModuleAdminController
 {
     public function __construct()
@@ -114,6 +115,15 @@ class AdminSj4webRelancepanierSentController extends ModuleAdminController
             'icon' => 'process-icon-mail',
         ];
 
+        $this->page_header_toolbar_btn['debug_unsubscribe'] = [
+            'href' => $this->context->link->getAdminLink(
+                'AdminSj4webRelancepanierSent', true, [], ['debug_unsubscribe' => 1, 'n' => 10]
+            ),
+            'desc' => $this->trans('Debug unsubscribe', [], 'Modules.Sj4webrelancepanier.Admin'),
+            'icon' => 'process-icon-cogs',
+        ];
+
+
     }
 
     public function postProcess()
@@ -122,6 +132,10 @@ class AdminSj4webRelancepanierSentController extends ModuleAdminController
             if (Tools::isSubmit("force_send_step{$step}")) {
                 $this->processForceSendStep($step);
             }
+        }
+        if (Tools::getIsset('debug_unsubscribe')) {
+            $this->processDebugUnsubscribeLins();
+            return; // on arrête le postProcess pour éviter de continuer avec le rendu de la liste
         }
 
         parent::postProcess();
@@ -247,6 +261,106 @@ class AdminSj4webRelancepanierSentController extends ModuleAdminController
         ]);
 
         return $this->context->smarty->fetch($tpl);
+    }
+
+    public function processDebugUnsubscribeLins()
+    {
+        // Autoriser que certains profils si tu veux (ici SuperAdmin = 1)
+        if (!$this->context->employee || !$this->context->employee->isLoggedBack()) {
+            header('HTTP/1.1 403 Forbidden'); die('Forbidden');
+        }
+        if ((int)$this->context->employee->id_profile !== 1) { // optionnel
+            header('HTTP/1.1 403 Forbidden'); die('Forbidden');
+        }
+
+        $limit = max(1, (int)Tools::getValue('n', 10));
+
+        // Récup 10 emails distincts aléatoires depuis "sent"
+        $rows = Db::getInstance()->executeS('
+        SELECT DISTINCT LOWER(s.email) AS email
+        FROM `'._DB_PREFIX_.'sj4web_relancepanier_sent` s
+        WHERE s.email IS NOT NULL AND s.email <> ""
+        ORDER BY RAND()
+        LIMIT '.(int)$limit
+        );
+
+        // Construire les liens
+        $out = [];
+        if ($rows) {
+            foreach ($rows as $r) {
+                $email = trim($r['email']);
+                if (!Validate::isEmail($email)) {
+                    continue;
+                }
+
+                // Inclure les guests (ignoreGuest=false)
+                $customer = new Customer();
+                $customer->getByEmail($email, null, false);
+
+                if (!Validate::isLoadedObject($customer) || empty($customer->id)) {
+                    // Fallback MariaDB-friendly
+                    $cRows = Db::getInstance()->executeS('
+                    SELECT id_customer FROM `'._DB_PREFIX_.'customer`
+                    WHERE LOWER(email) = "'.pSQL($email).'"
+                    ORDER BY id_customer DESC
+                    LIMIT 1
+                ');
+                    if ($cRows && !empty($cRows[0]['id_customer'])) {
+                        $customer = new Customer((int)$cRows[0]['id_customer']);
+                    }
+                }
+
+                if (Validate::isLoadedObject($customer) && !empty($customer->id)) {
+                    $linkOk  = Sj4webRelancepanierSender::getUnsubscribeLink($customer);
+                    $linkErr = $linkOk.'&error=1';
+                    $out[] = [
+                        'email' => $email,
+                        'ok'    => $linkOk,
+                        'err'   => $linkErr,
+                    ];
+                } else {
+                    $out[] = [
+                        'email' => $email,
+                        'ok'    => '',
+                        'err'   => '',
+                    ];
+                }
+            }
+        }
+
+        // Sortie HTML minimale (lisible sans CSS)
+        header('Content-Type: text/html; charset=utf-8');
+        header('X-Robots-Tag: noindex');
+
+        $backUrl = $this->context->link->getAdminLink('AdminSj4webRelancepanierSent');
+
+        echo '<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Unsubscribe debug</title></head><body>';
+        echo '<h1 style="margin:0 0 10px 0;">Unsubscribe test links ('.$limit.')</h1>';
+        echo '<p><a href="'.htmlspecialchars($backUrl, ENT_QUOTES, 'UTF-8').'">← Back to BO</a></p>';
+
+        if (empty($out)) {
+            echo '<p>No emails.</p></body></html>'; die;
+        }
+
+        echo '<ul>';
+        foreach ($out as $row) {
+            $email = htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8');
+
+            if ($row['ok']) {
+                $ok  = htmlspecialchars($row['ok'],  ENT_QUOTES, 'UTF-8');
+                $err = htmlspecialchars($row['err'], ENT_QUOTES, 'UTF-8');
+                echo '<li><strong>'.$email.'</strong><br>';
+                echo '<a target="_blank" rel="noopener" href="'.$ok.'">Open OK</a> — ';
+                echo '<a target="_blank" rel="noopener" href="'.$err.'">Open ERROR</a>';
+                echo '</li>';
+            } else {
+                echo '<li><strong>'.$email.'</strong> — <em>(no customer)</em></li>';
+            }
+        }
+        echo '</ul>';
+
+        echo '</body></html>';
+        die; // on coupe le rendu normal
     }
 
 

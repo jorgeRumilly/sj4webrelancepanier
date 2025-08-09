@@ -106,33 +106,46 @@ class Sj4webRelancepanierCartFinder
             return [];
         }
 
-        $prevStep = (int)$step - 1;
-        $interval = self::sqlIntervalClause($delay, $unit);
+        // Tolérance optionnelle (0 = désactivé)
+        $tolCol   = 'tolerance_time' . (int)$step;
+        $tUnitCol = 'tolerance_unit' . (int)$step;
+        $tol      = property_exists($campaign, $tolCol) ? (int)$campaign->$tolCol : 0;
+        $tolUnit  = property_exists($campaign, $tUnitCol) ? (string)$campaign->$tUnitCol : 'hour';
+
+        // Calcule fenêtrage (borne récente = NOW - delay ; borne ancienne = NOW - delay - tolerance)
+        $now = time();
+        $maxDate = date('Y-m-d H:i:s', strtotime('-' . $delay . ' ' . Tools::strtolower($unit), $now));
+        $minDate = null;
+        if ($tol > 0) {
+            $minTs = strtotime('-' . $delay . ' ' . Tools::strtolower($unit), $now);
+            $minTs = strtotime('-' . $tol   . ' ' . Tools::strtolower($tolUnit), $minTs);
+            $minDate = date('Y-m-d H:i:s', $minTs);
+        }
+
+        $prevStep = $step - 1;
+        $dateClause = "s.sent_at <= '" . pSQL($maxDate) . "'";
+        if ($minDate) {
+            $dateClause = "s.sent_at BETWEEN '" . pSQL($minDate) . "' AND '" . pSQL($maxDate) . "'";
+        }
 
         // Sélectionne directement les paniers éligibles :
         // - ont reçu la vague précédente (s=prev)
-        // - délai écoulé (s.sent_at <= NOW() - interval)
+        // - délai écoulé (s.sent_at <= NOW() - interval) et tjrs dans la tolérance de délais
         // - pas déjà relancés à cette vague (s2 null)
         // - pas de commande depuis (ni sur le panier, ni client après sent_at)
         // - client valide, non désinscrit
         $sql = "
         SELECT s.id_cart
         FROM " . _DB_PREFIX_ . "sj4web_relancepanier_sent s
-        INNER JOIN " . _DB_PREFIX_ . "cart c
-            ON c.id_cart = s.id_cart
-        INNER JOIN " . _DB_PREFIX_ . "customer cu
-            ON cu.id_customer = c.id_customer
-        LEFT JOIN " . _DB_PREFIX_ . "sj4web_relancepanier_unsubscribed u
-            ON u.email = cu.email
-        LEFT JOIN " . _DB_PREFIX_ . "sj4web_relancepanier_sent s2
-            ON s2.id_cart = s.id_cart AND s2.step = " . (int)$step . "
-        LEFT JOIN " . _DB_PREFIX_ . "orders o_cart
-            ON o_cart.id_cart = s.id_cart
-        LEFT JOIN " . _DB_PREFIX_ . "orders o_cust
-            ON o_cust.id_customer = cu.id_customer AND o_cust.date_add > s.sent_at
+        INNER JOIN " . _DB_PREFIX_ . "cart c ON c.id_cart = s.id_cart
+        INNER JOIN " . _DB_PREFIX_ . "customer cu ON cu.id_customer = c.id_customer
+        LEFT JOIN " . _DB_PREFIX_ . "sj4web_relancepanier_unsubscribed u ON u.email = cu.email
+        LEFT JOIN " . _DB_PREFIX_ . "sj4web_relancepanier_sent s2 ON s2.id_cart = s.id_cart AND s2.step = " . (int)$step . "
+        LEFT JOIN " . _DB_PREFIX_ . "orders o_cart ON o_cart.id_cart = s.id_cart
+        LEFT JOIN " . _DB_PREFIX_ . "orders o_cust ON o_cust.id_customer = cu.id_customer AND o_cust.date_add > s.sent_at
         WHERE s.id_campaign = " . (int)$campaign->id . "
           AND s.step = " . (int)$prevStep . "
-          AND s.sent_at <= (NOW() - {$interval})
+          AND {$dateClause}
           AND s2.id_sent IS NULL
           AND u.id_unsubscribed IS NULL
           AND o_cart.id_order IS NULL
@@ -170,7 +183,6 @@ class Sj4webRelancepanierCartFinder
               $excludedSql
             ORDER BY c.date_upd ASC
         ";
-//              AND c.date_upd BETWEEN '" . pSQL($startDate) . "' AND '" . pSQL($limitDate) . "'
 
         $rows = Db::getInstance()->executeS($sql);
         return array_map('intval', array_column($rows, 'id_cart'));

@@ -26,25 +26,24 @@ class Sj4webRelancepanierCampaign extends ObjectModel
     public $id_campaign;
     public $name;
     public $status; // draft, active, archived
-
     public $start_time;
     public $start_unit;
-
     public $delay_time1;
     public $delay_unit1;
     public $discount_time1;
     public $percent_time1;
-
     public $delay_time2;
     public $delay_unit2;
+    public $tolerance_time2;
+    public $tolerance_unit2;
     public $discount_time2;
     public $percent_time2;
-
     public $delay_time3;
     public $delay_unit3;
+    public $tolerance_time3;
+    public $tolerance_unit3;
     public $discount_time3;
     public $percent_time3;
-
     public $date_add;
     public $date_upd;
 
@@ -65,11 +64,15 @@ class Sj4webRelancepanierCampaign extends ObjectModel
 
             'delay_time2' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'delay_unit2' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 16],
+            'tolerance_time2' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'tolerance_unit2' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 16],
             'discount_time2' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'percent_time2' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
 
             'delay_time3' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
             'delay_unit3' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 16],
+            'tolerance_time3' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedInt'],
+            'tolerance_unit3' => ['type' => self::TYPE_STRING, 'validate' => 'isGenericName', 'size' => 16],
             'discount_time3' => ['type' => self::TYPE_BOOL, 'validate' => 'isBool'],
             'percent_time3' => ['type' => self::TYPE_FLOAT, 'validate' => 'isFloat'],
 
@@ -101,7 +104,7 @@ class Sj4webRelancepanierCampaign extends ObjectModel
         if (!$result || !is_array($result) || count($result) === 0) {
             return null; // No active campaign found
         }
-        $id = (int) $result[0]['id_campaign'];
+        $id = (int)$result[0]['id_campaign'];
         return $id ? new self($id) : null;
     }
 }

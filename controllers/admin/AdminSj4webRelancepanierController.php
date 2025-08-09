@@ -46,11 +46,11 @@ class AdminSj4webRelancepanierController extends ModuleAdminController
                 'list' => ['draft' => 'Draft', 'active' => 'Active', 'archived' => 'Archived'],
                 'filter_key' => 'a!status',
             ],
-            'delay_time1' => ['title' => $this->trans('T1 (h)', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
+            'delay_time1' => ['title' => $this->trans('T1', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
             'percent_time1' => ['title' => $this->trans('BR T1 (%)', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
-            'delay_time2' => ['title' => $this->trans('T2 (h)', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
+            'delay_time2' => ['title' => $this->trans('T2', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
             'percent_time2' => ['title' => $this->trans('BR T2 (%)', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
-            'delay_time3' => ['title' => $this->trans('T3 (h)', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
+            'delay_time3' => ['title' => $this->trans('T3', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
             'percent_time3' => ['title' => $this->trans('BR T3 (%)', [], 'Modules.Sj4webrelancepanier.Admin'), 'search' => false],
         ];
         $this->addRowAction('edit');
@@ -148,6 +148,27 @@ class AdminSj4webRelancepanierController extends ModuleAdminController
                 ],
                 'disabled' => $isLocked,
             ];
+
+            // Tolerance (uniquement T2/T3)
+            if ($i >= 2) {
+                $this->fields_form['input'][] = [
+                    'type' => 'text',
+                    'label' => $this->trans("Tolerance T$i", [], 'Modules.Sj4webrelancepanier.Admin'),
+                    'name' => "tolerance_time$i",
+                    'required' => false,
+                    'disabled' => $isLocked,
+                    'desc' => $this->trans('Max window after delay. 0 = disabled.', [], 'Modules.Sj4webrelancepanier.Admin'),
+                ];
+                $this->fields_form['input'][] = [
+                    'type' => 'select',
+                    'label' => $this->trans("Tolerance T$i unit", [], 'Modules.Sj4webrelancepanier.Admin'),
+                    'name' => "tolerance_unit$i",
+                    'required' => true,
+                    'options' => ['query'=>$timeUnitOptions,'id'=>'id_option','name'=>'name'],
+                    'disabled' => $isLocked,
+                ];
+            }
+
             $this->fields_form['input'][] = [
                 'type' => 'switch',
                 'label' => $this->trans("Enable BR for T$i", [], 'Modules.Sj4webrelancepanier.Admin'),

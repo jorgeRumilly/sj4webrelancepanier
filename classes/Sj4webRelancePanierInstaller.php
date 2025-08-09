@@ -36,33 +36,36 @@ class Sj4webRelancePanierInstaller
 
         $queries[] = "
             CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."sj4web_relancepanier_campaign` (
-                `id_campaign` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `name` VARCHAR(128) NOT NULL,
-                `status` ENUM('draft', 'active', 'archived') NOT NULL DEFAULT 'draft',
-        
-                `start_time` INT UNSIGNED DEFAULT 0,
-                `start_unit` ENUM('minute', 'hour', 'day', 'month') NOT NULL DEFAULT 'hour',
-        
-                `delay_time1` INT UNSIGNED DEFAULT 0,
-                `delay_unit1` ENUM('hour', 'day', 'month') NOT NULL DEFAULT 'hour',
-                `discount_time1` TINYINT(1) DEFAULT 0,
-                `percent_time1` FLOAT DEFAULT 0,
-        
-                `delay_time2` INT UNSIGNED DEFAULT 0,
-                `delay_unit2` ENUM('hour', 'day', 'month') NOT NULL DEFAULT 'hour',
-                `discount_time2` TINYINT(1) DEFAULT 0,
-                `percent_time2` FLOAT DEFAULT 0,
-        
-                `delay_time3` INT UNSIGNED DEFAULT 0,
-                `delay_unit3` ENUM('hour', 'day', 'month') NOT NULL DEFAULT 'hour',
-                `discount_time3` TINYINT(1) DEFAULT 0,
-                `percent_time3` FLOAT DEFAULT 0,
-        
-                `date_add` DATETIME NOT NULL,
-                `date_upd` DATETIME NOT NULL,
-                PRIMARY KEY (`id_campaign`)
-            ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;";
-
+              `id_campaign` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+              `name` VARCHAR(128) NOT NULL,
+              `status` ENUM('draft','active','archived') NOT NULL DEFAULT 'draft',
+            
+              `start_time` INT UNSIGNED DEFAULT 0,
+              `start_unit` ENUM('minute','hour','day','month') NOT NULL DEFAULT 'hour',
+            
+              `delay_time1` INT UNSIGNED DEFAULT 0,
+              `delay_unit1` ENUM('minute','hour','day','month') NOT NULL DEFAULT 'hour',
+              `discount_time1` TINYINT(1) DEFAULT 0,
+              `percent_time1` FLOAT DEFAULT 0,
+            
+              `delay_time2` INT UNSIGNED DEFAULT 0,
+              `delay_unit2` ENUM('minute','hour','day','month') NOT NULL DEFAULT 'hour',
+              `tolerance_time2` INT UNSIGNED DEFAULT 0,
+              `tolerance_unit2` ENUM('minute','hour','day','month') NOT NULL DEFAULT 'hour',
+              `discount_time2` TINYINT(1) DEFAULT 0,
+              `percent_time2` FLOAT DEFAULT 0,
+            
+              `delay_time3` INT UNSIGNED DEFAULT 0,
+              `delay_unit3` ENUM('minute','hour','day','month') NOT NULL DEFAULT 'hour',
+              `tolerance_time3` INT UNSIGNED DEFAULT 0,
+              `tolerance_unit3` ENUM('minute','hour','day','month') NOT NULL DEFAULT 'hour',
+              `discount_time3` TINYINT(1) DEFAULT 0,
+              `percent_time3` FLOAT DEFAULT 0,
+            
+              `date_add` DATETIME NOT NULL,
+              `date_upd` DATETIME NOT NULL,
+              PRIMARY KEY (`id_campaign`)
+            ) ENGINE="._MYSQL_ENGINE_." DEFAULT CHARSET=utf8;";
 
         $queries[] = "
             CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."sj4web_relancepanier_sent` (

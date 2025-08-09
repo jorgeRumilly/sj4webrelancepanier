@@ -97,15 +97,17 @@ class Sj4webRelancepanierSender
      */
     public static function getUnsubscribeLink(Customer $customer): string
     {
-        $hash = hash_hmac('sha256', $customer->email, Configuration::get('SJ4WEB_RP_UNSUB_KEY'));
+        $secret = (string) Configuration::get('SJ4WEB_RP_SECRET') ?: _COOKIE_KEY_;
+        $email = $customer->email;
+        $e = rawurlencode($email);
+        $sig = hash_hmac('sha256', $email, $secret);
 
-        $unsubscribe_link = Context::getContext()->link->getModuleLink(
+        return Context::getContext()->link->getModuleLink(
             'sj4webrelancepanier',
             'unsubscribe',
-            ['email' => $customer->email, 'hash' => $hash],
+            ['e' => $e, 't' => $sig],
             true
         );
-        return $unsubscribe_link;
     }
 
     public static function generateDiscountCode(Sj4webRelancepanierCampaign $campaign, Customer $customer, int $step)
