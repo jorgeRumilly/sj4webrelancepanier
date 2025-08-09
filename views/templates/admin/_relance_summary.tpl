@@ -1,3 +1,10 @@
+{*
+  SJ4WEB - Abandoned Cart Reminder (sj4webrelancepanier)
+  Copyright (C) 2025  SJ4WEB.FR
+  Licensed under GPL-3.0-or-later
+  See LICENSE file for more details.
+*}
+
 {if $active_campaign}
     <div class="alert alert-info">
         <strong>{l s='Active campaign:' mod='sj4webrelancepanier'} {$active_campaign.name|escape:'html'}</strong><br>
