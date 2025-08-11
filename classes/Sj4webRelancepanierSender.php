@@ -21,6 +21,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+require_once dirname(__FILE__) . '/Sj4webRelancepanierCrypto.php';
+
 class Sj4webRelancepanierSender
 {
     public static function sendRelanceEmails(Sj4webRelancepanierCampaign $campaign, int $step, array $cart_ids): int
@@ -41,7 +43,7 @@ class Sj4webRelancepanierSender
             $template_vars = [
                 '{firstname}' => $customer->firstname,
                 '{lastname}'  => $customer->lastname,
-                '{cart_link}' => Context::getContext()->link->getPageLink('cart', true),
+                '{cart_link}' => Context::getContext()->link->getPageLink('cart', true, null, ['id_cart' => $cart->id]),
                 '{unsubscribe_link}' => $unsubscribe_link,
             ];
 
@@ -97,18 +99,19 @@ class Sj4webRelancepanierSender
      */
     public static function getUnsubscribeLink(Customer $customer): string
     {
-        $secret = (string) Configuration::get('SJ4WEB_RP_SECRET') ?: _COOKIE_KEY_;
-        $email = $customer->email;
-        $e = rawurlencode($email);
-        $sig = hash_hmac('sha256', $email, $secret);
+        $email = Tools::strtolower(trim($customer->email));
+        $key   = (string) Configuration::get('SJ4WEB_RP_ENC_KEY');
+
+        $token = Sj4webRelancepanierCrypto::encryptEmail($email, $key);
 
         return Context::getContext()->link->getModuleLink(
             'sj4webrelancepanier',
             'unsubscribe',
-            ['e' => $e, 't' => $sig],
+            ['u' => $token], // pas d'email en clair
             true
         );
     }
+
 
     public static function generateDiscountCode(Sj4webRelancepanierCampaign $campaign, Customer $customer, int $step)
     {

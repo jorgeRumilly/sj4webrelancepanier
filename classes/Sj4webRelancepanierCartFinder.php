@@ -147,6 +147,7 @@ class Sj4webRelancepanierCartFinder
           AND s.step = " . (int)$prevStep . "
           AND {$dateClause}
           AND s2.id_sent IS NULL
+          AND cu.email IS NOT NULL AND cu.email <> '' 
           AND u.id_unsubscribed IS NULL
           AND o_cart.id_order IS NULL
           AND o_cust.id_order IS NULL

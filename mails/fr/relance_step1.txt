@@ -1,0 +1,8 @@
+Bonjour {firstname} {lastname},
+
+Nous avons remarqué que vous avez laissé des articles dans votre panier.
+
+Lien panier : {cart_link}
+Code promo : {discount_code}
+
+Pour ne plus recevoir ces emails : {unsubscribe_link}

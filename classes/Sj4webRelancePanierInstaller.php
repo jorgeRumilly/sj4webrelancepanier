@@ -85,12 +85,15 @@ class Sj4webRelancePanierInstaller
 
         $queries[] = "
             CREATE TABLE IF NOT EXISTS `"._DB_PREFIX_."sj4web_relancepanier_unsubscribed` (
-                `id_unsubscribed` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-                `email` VARCHAR(255) NOT NULL,
-                `hash` VARCHAR(64) NOT NULL,
-                `unsubscribed_at` DATETIME NOT NULL,
-                PRIMARY KEY (`id_unsubscribed`)
-            ) ENGINE=" . _MYSQL_ENGINE_ . " DEFAULT CHARSET=utf8;";
+              `id_unsubscribed` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+              `email` VARCHAR(255) NOT NULL DEFAULT '',
+              `hash`  VARCHAR(255)  NOT NULL DEFAULT '',
+              `unsubscribed_at` DATETIME NOT NULL,
+              PRIMARY KEY (`id_unsubscribed`),
+              UNIQUE KEY `uniq_email` (`email`),
+              KEY `idx_hash` (`hash`)
+            ) ENGINE="._MYSQL_ENGINE_." DEFAULT CHARSET=utf8;";
+
 
         foreach ($queries as $query) {
             if (!Db::getInstance()->execute($query)) {

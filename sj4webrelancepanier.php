@@ -7,6 +7,10 @@ require_once dirname(__FILE__) . '/classes/Sj4webRelancePanierInstaller.php';
 
 class Sj4webRelancepanier extends Module
 {
+    const CONF_KEY_CURR = 'SJ4WEB_RP_ENC_KEY';
+    const CONF_KEY_PREV = 'SJ4WEB_RP_ENC_KEY_PREV';
+
+
     public function __construct()
     {
         $this->name = 'sj4webrelancepanier';
@@ -33,7 +37,9 @@ class Sj4webRelancepanier extends Module
             && Sj4webRelancePanierInstaller::installDb()
             && $this->registerHook('displayBackOfficeHeader')
             && $this->installTab()
-            && $this->installMailsSentsTab();
+            && $this->installMailsSentsTab()
+            && Configuration::updateValue(self::CONF_KEY_CURR, $this->generateKey())
+            && Configuration::updateValue(self::CONF_KEY_PREV, '');
 
     }
 
@@ -119,7 +125,76 @@ class Sj4webRelancepanier extends Module
 
     public function getContent()
     {
-        Tools::redirectAdmin($this->context->link->getAdminLink('AdminSj4webRelancepanier'));
+        // Actions
+        if (Tools::isSubmit('sj4web_rp_rotate_key')) {
+            $this->rotateKey();
+            $this->confirmations[] = $this->l('A new encryption key has been generated. Previous key kept for compatibility.');
+        }
+        if (Tools::isSubmit('sj4web_rp_clear_prev')) {
+            $this->clearPrevKey();
+            $this->confirmations[] = $this->l('Previous key cleared.');
+        }
+
+        // Lecture
+        $curr = (string) Configuration::get(self::CONF_KEY_CURR);
+        $prev = (string) Configuration::get(self::CONF_KEY_PREV);
+
+        // Form
+        $fields_form = [
+            'form' => [
+                'legend' => ['title' => $this->l('Unsubscribe encryption keys')],
+                'input'  => [
+                    [
+                        'type' => 'text',
+                        'label' => $this->l('Current key'),
+                        'name' => 'sj4web_rp_key_current',
+                        'readonly' => true,
+                        'desc' => $this->l('Used to encrypt new unsubscribe links.'),
+                    ],
+                    [
+                        'type' => 'text',
+                        'label' => $this->l('Previous key'),
+                        'name' => 'sj4web_rp_key_previous',
+                        'readonly' => true,
+                        'desc' => $this->l('Kept temporarily to accept old links. You can clear it.'),
+                    ],
+                ],
+                'submit' => ['title' => $this->l('Back')],
+                'buttons' => [
+                    [
+                        'title' => $this->l('Generate new key (rotate)'),
+                        'class' => 'btn btn-primary',
+                        'icon'  => 'process-icon-cogs',
+                        'type'  => 'submit',
+                        'name'  => 'sj4web_rp_rotate_key',
+                    ],
+                    [
+                        'title' => $this->l('Clear previous key'),
+                        'class' => 'btn btn-default',
+                        'icon'  => 'process-icon-eraser',
+                        'type'  => 'submit',
+                        'name'  => 'sj4web_rp_clear_prev',
+                    ],
+                ],
+            ],
+        ];
+
+        $helper = new HelperForm();
+        $helper->show_toolbar = false;
+        $helper->table = $this->table;
+        $helper->default_form_language = (int) $this->context->language->id;
+        $helper->allow_employee_form_lang = (int) $this->context->language->id;
+        $helper->identifier = $this->identifier;
+        $helper->submit_action = 'submit_'.$this->name;
+        $helper->currentIndex = $this->context->link->getAdminLink('AdminModules', false).'&configure='.$this->name.'&tab_module='.$this->tab.'&module_name='.$this->name;
+        $helper->token = Tools::getAdminTokenLite('AdminModules');
+        $helper->fields_value = [
+            'sj4web_rp_key_current'  => $curr,
+            'sj4web_rp_key_previous' => $prev !== '' ? $prev : $this->l('(empty)'),
+        ];
+
+        return (!empty($this->confirmations)) ?($this->displayConfirmation(implode('<br>', $this->confirmations ?: []))) : ''
+            . $helper->generateForm([$fields_form]);
     }
 
     public function hookDisplayBackOfficeHeader($params){
@@ -128,4 +203,26 @@ class Sj4webRelancepanier extends Module
         }
     }
 
+    /** Génère une clé aléatoire (AES-256) */
+    private function generateKey(): string
+    {
+        // 32 bytes ~ 256 bits ; base64 réduite OK
+        return bin2hex(random_bytes(32));
+    }
+
+    /** Rotation : current -> previous, new current */
+    private function rotateKey(): void
+    {
+        $curr = (string) Configuration::get(self::CONF_KEY_CURR);
+        if ($curr !== '') {
+            Configuration::updateValue(self::CONF_KEY_PREV, $curr);
+        }
+        Configuration::updateValue(self::CONF_KEY_CURR, $this->generateKey());
+    }
+
+    /** Vide la clé précédente (arrête la période de grâce) */
+    private function clearPrevKey(): void
+    {
+        Configuration::updateValue(self::CONF_KEY_PREV, '');
+    }
 }
