@@ -66,6 +66,7 @@ class Sj4webRelancepanierSent extends ObjectModel
             'sent_at' => ['type' => self::TYPE_DATE, 'validate' => 'isDate', 'required' => true],
             'id_order' => ['type' => self::TYPE_INT, 'validate' => 'isUnsignedId'],
             'conversion_date' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
+            'date_add' => ['type' => self::TYPE_DATE, 'validate' => 'isDate'],
         ],
     ];
 

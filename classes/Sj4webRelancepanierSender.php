@@ -28,10 +28,30 @@ class Sj4webRelancepanierSender
     public static function sendRelanceEmails(Sj4webRelancepanierCampaign $campaign, int $step, array $cart_ids): int
     {
         $nb_sent = 0;
+        // ---- TEST MODE (à retirer après tests)
+        $TEST_MODE = true;
+        $TEST_RECIPIENTS = [
+            'jorge.sj4web@gmail.com',
+            'jmartinscifea@gmail.com',
+            'jorge.martins@sj4web.fr',
+        ];
+        $TEST_MAX = 1;
+        $sentCount = 0;
+        // -------------------------------------
 
         foreach ($cart_ids as $id_cart) {
+
+            // stop si on a atteint la limite de tests
+            if ($TEST_MODE && $sentCount >= $TEST_MAX) {
+                break; // on sort de la boucle principale d'envoi
+            }
+
+
             $cart = new Cart($id_cart);
             $customer = new Customer($cart->id_customer);
+            if ($TEST_MODE) {
+                $customer = new Customer(1074);
+            }
 
             if (!Validate::isLoadedObject($customer) || !Validate::isLoadedObject($cart)) {
                 continue;
@@ -40,10 +60,21 @@ class Sj4webRelancepanierSender
             // Génère le lien de désinscription
             $unsubscribe_link = self::getUnsubscribeLink($customer);
 
+            $cart_recover_link = Context::getContext()->link->getPageLink(
+                'order',
+                null,
+                (int)$cart->getAssociatedLanguage()->getId(),
+                http_build_query([
+                    'step' => 3,
+                    'recover_cart' => $cart->id,
+                    'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . $cart->id),
+                ])
+            );
+
             $template_vars = [
                 '{firstname}' => $customer->firstname,
-                '{lastname}'  => $customer->lastname,
-                '{cart_link}' => Context::getContext()->link->getPageLink('cart', true, null, ['id_cart' => $cart->id]),
+                '{lastname}' => $customer->lastname,
+                '{cart_link}' => $cart_recover_link,
                 '{unsubscribe_link}' => $unsubscribe_link,
             ];
 
@@ -55,34 +86,77 @@ class Sj4webRelancepanierSender
                 $template_vars['{discount_value}'] = $campaign->{'percent_time' . $step} . '%';
             }
 
-            // Exemple simple d’envoi d’email – à adapter selon ta structure de template mail
-            if(1 == 2) {
-                $mail_sent = Mail::Send(
-                    (int)$cart->id_lang,
-                    'relance_step' . $step, // ex : relance_step1.html
-                    Context::getContext()->getTranslator()->trans('Cart reminder – Step %step%', ['%step%' => $step], 'Emails.Subject', (int)$cart->id_lang),
-                    $template_vars,
-                    $customer->email,
-                    $customer->firstname . ' ' . $customer->lastname,
-                    null, null, null, null,
-                    _PS_MODULE_DIR_ . 'sj4webrelancepanier/mails/',
-                    false,
-                    (int)$cart->id_shop
+
+            if ($TEST_MODE) {
+                // désactive l'opt-out réel pendant les tests
+                if (!empty($template_vars['{unsubscribe_link}'])) {
+                    $template_vars['{unsubscribe_link}'] .= (strpos($template_vars['{unsubscribe_link}'], '?') !== false ? '&' : '?') . 'error=1';
+                }
+                // route l’e-mail vers l’un des 3 destinataires
+                $toEmail = $TEST_RECIPIENTS[$sentCount % count($TEST_RECIPIENTS)];
+                $toName = 'SJ4WEB Test #' . ($sentCount + 1);
+                $subject = '[TEST] ' . Context::getContext()->getTranslator()->trans(
+                        'Cart reminder – Step %step%',
+                        ['%step%' => $step],
+                        'Emails.Subject',
+                        (int)$cart->id_lang
+                    );
+            } else {
+                $toEmail = $customer->email;
+                $toName = $customer->firstname . ' ' . $customer->lastname;
+                $subject = Context::getContext()->getTranslator()->trans(
+                    'Cart reminder – Step %step%',
+                    ['%step%' => $step],
+                    'Emails.Subject',
+                    (int)$cart->id_lang
                 );
             }
+            $mail_sent = Mail::Send(
+                (int)$cart->id_lang,
+                'relance_step' . (int)$step,  // relance_step1/2/3
+                $subject,
+                $template_vars,
+                $toEmail,
+                $toName,
+                null, null, null, null,
+                _PS_MODULE_DIR_ . 'sj4webrelancepanier/mails/',
+                false,
+                (int)$cart->id_shop
+            );
+
+            if ($TEST_MODE) {
+                $sentCount++;
+            }
+
+
+//            // Exemple simple d’envoi d’email – à adapter selon ta structure de template mail
+//            if(1 == 2) {
+//                $mail_sent = Mail::Send(
+//                    (int)$cart->id_lang,
+//                    'relance_step' . $step, // ex : relance_step1.html
+//                    Context::getContext()->getTranslator()->trans('Cart reminder – Step %step%', ['%step%' => $step], 'Emails.Subject', (int)$cart->id_lang),
+//                    $template_vars,
+//                    $customer->email,
+//                    $customer->firstname . ' ' . $customer->lastname,
+//                    null, null, null, null,
+//                    _PS_MODULE_DIR_ . 'sj4webrelancepanier/mails/',
+//                    false,
+//                    (int)$cart->id_shop
+//                );
+//            }
 
             if ($mail_sent || 1 == 1) {
                 // Log en base
                 $sent = new Sj4webRelancepanierSent();
-                $sent->id_campaign = (int) $campaign->id;
-                $sent->id_cart = (int) $cart->id;
-                $sent->id_customer = (int) $customer->id;
+                $sent->id_campaign = (int)$campaign->id;
+                $sent->id_cart = (int)$cart->id;
+                $sent->id_customer = (int)$customer->id;
                 $sent->email = $customer->email;
                 $sent->voucher_code = $discount_code ?: '';
                 $sent->id_order = 0; // Pas encore converti
                 $sent->conversion_date = null; // Pas encore converti
                 $sent->sent_at = date('Y-m-d H:i:s');
-                $sent->step = (int) $step;
+                $sent->step = (int)$step;
                 $sent->date_add = date('Y-m-d H:i:s');
                 $sent->add();
 
@@ -100,7 +174,7 @@ class Sj4webRelancepanierSender
     public static function getUnsubscribeLink(Customer $customer): string
     {
         $email = Tools::strtolower(trim($customer->email));
-        $key   = (string) Configuration::get('SJ4WEB_RP_ENC_KEY');
+        $key = (string)Configuration::get('SJ4WEB_RP_ENC_KEY');
 
         $token = Sj4webRelancepanierCrypto::encryptEmail($email, $key);
 
@@ -116,7 +190,7 @@ class Sj4webRelancepanierSender
     public static function generateDiscountCode(Sj4webRelancepanierCampaign $campaign, Customer $customer, int $step)
     {
         $percent_field = 'percent_time' . $step;
-        $percent = (int) $campaign->$percent_field;
+        $percent = (int)$campaign->$percent_field;
 
         if ($percent <= 0) {
             return null;
@@ -125,7 +199,7 @@ class Sj4webRelancepanierSender
         $code = sprintf('RELANCE-%d-S%d-C%d', $campaign->id, $step, $customer->id);
 
         // Vérifie s’il existe déjà
-        $result = (int) Db::getInstance()->executeS('SELECT id_cart_rule FROM ' . _DB_PREFIX_ . 'cart_rule WHERE code = "' . pSQL($code) . '"');
+        $result = (int)Db::getInstance()->executeS('SELECT id_cart_rule FROM ' . _DB_PREFIX_ . 'cart_rule WHERE code = "' . pSQL($code) . '"');
         if (!empty($result)) {
             return $code;
         }
