@@ -142,6 +142,130 @@
             <source>(empty)</source>
             <target>(vide)</target>
         </trans-unit>
+        <trans-unit id="no_carts_to_send_for_step">
+          <source>No carts to send for step %step%.</source>
+          <target>Aucun panier à envoyer pour l’étape %step%.</target>
+        </trans-unit>
+        <trans-unit id="count_emails_sent_for_step">
+          <source>%count% emails sent for step %step%.</source>
+          <target>%count% e-mails envoyés pour l’étape %step%.</target>
+        </trans-unit>
+        <trans-unit id="no_active_campaign_found">
+          <source>No active campaign found.</source>
+          <target>Aucune campagne active trouvée.</target>
+        </trans-unit>
+        <trans-unit id="no_campaigns_to_process_for_step">
+          <source>No campaigns to process for step %step%.</source>
+          <target>Aucune campagne à traiter pour l’étape %step%.</target>
+        </trans-unit>
+        <trans-unit id="force_t1_sending">
+          <source>Force T1 sending</source>
+          <target>Forcer l’envoi T1</target>
+        </trans-unit>
+        <trans-unit id="force_t2_sending">
+          <source>Force T2 sending</source>
+          <target>Forcer l’envoi T2</target>
+        </trans-unit>
+        <trans-unit id="force_t3_sending">
+          <source>Force T3 sending</source>
+          <target>Forcer l’envoi T3</target>
+        </trans-unit>
+        <trans-unit id="debug_unsubscribe">
+          <source>Debug unsubscribe</source>
+          <target>Déboguer la désinscription</target>
+        </trans-unit>
+        <trans-unit id="active_campaign">
+          <source>Active campaign:</source>
+          <target>Campagne active :</target>
+        </trans-unit>
+        <trans-unit id="estimated_reminders_to_send_t1">
+          <source>Estimated reminders to send - T1: %count%</source>
+          <target>Relances estimées à envoyer - T1 : %count%</target>
+        </trans-unit>
+        <trans-unit id="follow_up_for_campaign">
+          <source>Follow-up for campaign:</source>
+          <target>Suivi pour la campagne :</target>
+        </trans-unit>
+        <trans-unit id="campaign">
+          <source>Campaign</source>
+          <target>Campagne</target>
+        </trans-unit>
+        <trans-unit id="step">
+          <source>Step</source>
+          <target>Étape</target>
+        </trans-unit>
+        <trans-unit id="email">
+          <source>Email</source>
+          <target>E-mail</target>
+        </trans-unit>
+        <trans-unit id="voucher">
+          <source>Voucher</source>
+          <target>Bon de réduction</target>
+        </trans-unit>
+        <trans-unit id="sent_on">
+          <source>Sent on</source>
+          <target>Envoyé le</target>
+        </trans-unit>
+        <trans-unit id="order_id">
+          <source>Order ID</source>
+          <target>ID commande</target>
+        </trans-unit>
+        <trans-unit id="converted_on">
+          <source>Converted on</source>
+          <target>Converti le</target>
+        </trans-unit>
+        <trans-unit id="campaign_id">
+          <source>Campaign ID</source>
+          <target>ID campagne</target>
+        </trans-unit>
+        <trans-unit id="start_delay">
+          <source>Start delay</source>
+          <target>Délai initial</target>
+        </trans-unit>
+        <trans-unit id="min_delay_after_cart_creation">
+          <source>Minimum delay after cart creation before considering it as abandoned.</source>
+          <target>Délai minimum après création du panier avant de le considérer comme abandonné.</target>
+        </trans-unit>
+        <trans-unit id="start_delay_unit">
+          <source>Start delay unit</source>
+          <target>Unité du délai initial</target>
+        </trans-unit>
+        <trans-unit id="minutes">
+          <source>Minutes</source>
+          <target>Minutes</target>
+        </trans-unit>
+        <trans-unit id="hours">
+          <source>Hours</source>
+          <target>Heures</target>
+        </trans-unit>
+        <trans-unit id="days">
+          <source>Days</source>
+          <target>Jours</target>
+        </trans-unit>
+        <trans-unit id="months">
+          <source>Months</source>
+          <target>Mois</target>
+        </trans-unit>
+        <trans-unit id="t1">
+          <source>T1</source>
+          <target>T1</target>
+        </trans-unit>
+        <trans-unit id="t2">
+          <source>T2</source>
+          <target>T2</target>
+        </trans-unit>
+        <trans-unit id="t3">
+          <source>T3</source>
+          <target>T3</target>
+        </trans-unit>
+        <trans-unit id="max_window_after_delay">
+          <source>Max window after delay. 0 = disabled.</source>
+          <target>Fenêtre maximale après délai. 0 = désactivé.</target>
+        </trans-unit>
+        <trans-unit id="cart_reminder_step">
+          <source>Cart reminder – Step %step%</source>
+          <target>Relance panier – Étape %step%</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>
