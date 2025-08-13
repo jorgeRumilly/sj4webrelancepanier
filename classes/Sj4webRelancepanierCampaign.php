@@ -85,11 +85,13 @@ class Sj4webRelancepanierCampaign extends ObjectModel
      * Check if this campaign has generated any emails.
      * @return bool
      */
-    public function hasGeneratedMails()
+    public function hasGeneratedMails(): bool
     {
-        $sql = 'SELECT COUNT(*) FROM ' . _DB_PREFIX_ . 'sj4web_relancepanier_sent WHERE id_campaign = ' . (int)$this->id_campaign;
-        return (bool)Db::getInstance()->getValue($sql);
+        $sql = 'SELECT COUNT(*) AS c FROM '._DB_PREFIX_.'sj4web_relancepanier_sent WHERE id_campaign='.(int)$this->id_campaign;
+        $rows = Db::getInstance()->executeS($sql);
+        return !empty($rows) && (int)$rows[0]['c'] > 0;
     }
+
 
     /**
      * Get the most recent active campaign.

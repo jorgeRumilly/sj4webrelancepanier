@@ -36,6 +36,7 @@ class Sj4webRelancepanier extends Module
         return parent::install()
             && Sj4webRelancePanierInstaller::installDb()
             && $this->registerHook('displayBackOfficeHeader')
+            && $this->registerHook('actionValidateOrder')
             && $this->installTab()
             && $this->installMailsSentsTab()
             && Configuration::updateValue(self::CONF_KEY_CURR, $this->generateKey())
@@ -202,6 +203,24 @@ class Sj4webRelancepanier extends Module
             $this->context->controller->addCSS($this->_path . 'views/css/sj4web_relancepannier_admin.css', 'all');
         }
     }
+
+    public function hookActionValidateOrder($params)
+    {
+        $order = $params['order'];
+        $customerId = (int)$order->id_customer;
+        $cartId = (int)$order->id_cart;
+        $sql = 'SELECT id_sent FROM '._DB_PREFIX_.'sj4web_relancepanier_sent
+            WHERE (id_cart='.(int)$cartId.' OR (email="'.pSQL($order->getCustomer()->email).'" AND sent_at<= "'.pSQL($order->date_add).'"))
+            ORDER BY sent_at DESC LIMIT 1';
+        $rows = Db::getInstance()->executeS($sql);
+        if ($rows) {
+            $sent = new Sj4webRelancepanierSent((int)$rows[0]['id_sent']);
+            $sent->id_order = (int)$order->id;
+            $sent->conversion_date = $order->date_add;
+            $sent->update();
+        }
+    }
+
 
     /** Génère une clé aléatoire (AES-256) */
     private function generateKey(): string

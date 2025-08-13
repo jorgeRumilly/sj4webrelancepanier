@@ -94,6 +94,11 @@ class Sj4webRelancePanierInstaller
               KEY `idx_hash` (`hash`)
             ) ENGINE="._MYSQL_ENGINE_." DEFAULT CHARSET=utf8;";
 
+        $queries[] = "
+            ALTER TABLE `"._DB_PREFIX_."sj4web_relancepanier_sent`
+            ADD KEY `idx_campaign_step_sent` (`id_campaign`,`step`,`sent_at`),
+            ADD KEY `idx_cart_step`          (`id_cart`,`step`),
+            ADD KEY `idx_email`              (`email`);";
 
         foreach ($queries as $query) {
             if (!Db::getInstance()->execute($query)) {

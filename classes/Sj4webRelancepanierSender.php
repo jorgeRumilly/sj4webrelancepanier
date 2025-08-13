@@ -137,24 +137,7 @@ class Sj4webRelancepanierSender
                 $sentCount++;
             }
 
-
-//            // Exemple simple d’envoi d’email – à adapter selon ta structure de template mail
-//            if(1 == 2) {
-//                $mail_sent = Mail::Send(
-//                    (int)$cart->id_lang,
-//                    'relance_step' . $step, // ex : relance_step1.html
-//                    Context::getContext()->getTranslator()->trans('Cart reminder – Step %step%', ['%step%' => $step], 'Emails.Subject', (int)$cart->id_lang),
-//                    $template_vars,
-//                    $customer->email,
-//                    $customer->firstname . ' ' . $customer->lastname,
-//                    null, null, null, null,
-//                    _PS_MODULE_DIR_ . 'sj4webrelancepanier/mails/',
-//                    false,
-//                    (int)$cart->id_shop
-//                );
-//            }
-
-            if ($mail_sent || 1 == 1) {
+            if ($mail_sent) {
                 // Log en base
                 $sent = new Sj4webRelancepanierSent();
                 $sent->id_campaign = (int)$campaign->id;
