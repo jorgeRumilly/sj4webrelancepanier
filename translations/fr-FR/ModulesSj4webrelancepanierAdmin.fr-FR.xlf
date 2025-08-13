@@ -98,6 +98,50 @@
         <source>Campaign must be in draft status to be marked as active.</source>
         <target>La campagne doit être en brouillon pour être activée.</target>
       </trans-unit>
+        <trans-unit id="a_new_encryption_key_generated">
+            <source>A new encryption key has been generated. Previous key kept for compatibility.</source>
+            <target>Une nouvelle clé de chiffrement a été générée. L’ancienne clé est conservée pour compatibilité.</target>
+        </trans-unit>
+        <trans-unit id="previous_key_cleared">
+            <source>Previous key cleared.</source>
+            <target>Ancienne clé effacée.</target>
+        </trans-unit>
+        <trans-unit id="unsubscribe_encryption_keys">
+            <source>Unsubscribe encryption keys</source>
+            <target>Clés de chiffrement de désinscription</target>
+        </trans-unit>
+        <trans-unit id="current_key">
+            <source>Current key</source>
+            <target>Clé actuelle</target>
+        </trans-unit>
+        <trans-unit id="used_to_encrypt_new_unsubscribe_links">
+            <source>Used to encrypt new unsubscribe links.</source>
+            <target>Utilisée pour chiffrer les nouveaux liens de désinscription.</target>
+        </trans-unit>
+        <trans-unit id="previous_key">
+            <source>Previous key</source>
+            <target>Ancienne clé</target>
+        </trans-unit>
+        <trans-unit id="kept_temporarily_to_accept_old_links">
+            <source>Kept temporarily to accept old links. You can clear it.</source>
+            <target>Conservée temporairement pour accepter les anciens liens. Vous pouvez l’effacer.</target>
+        </trans-unit>
+        <trans-unit id="back">
+            <source>Back</source>
+            <target>Retour</target>
+        </trans-unit>
+        <trans-unit id="generate_new_key_rotate">
+            <source>Generate new key (rotate)</source>
+            <target>Générer une nouvelle clé (rotation)</target>
+        </trans-unit>
+        <trans-unit id="clear_previous_key">
+            <source>Clear previous key</source>
+            <target>Effacer l’ancienne clé</target>
+        </trans-unit>
+        <trans-unit id="empty">
+            <source>(empty)</source>
+            <target>(vide)</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

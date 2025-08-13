@@ -1,8 +1,12 @@
 Bonjour {firstname} {lastname},
 
-Nous avons remarqué que vous avez laissé des articles dans votre panier.
+Ceci est notre dernier message au sujet de ce panier. Il vous suffit de quelques secondes pour finaliser.
 
-Lien panier : {cart_link}
+Contenu du panier :
+{cart_products_text}
+
+Voir votre panier : {cart_link}
+
 Code promo : {discount_code}
 
 Pour ne plus recevoir ces emails : {unsubscribe_link}

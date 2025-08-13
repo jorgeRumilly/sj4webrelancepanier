@@ -128,11 +128,11 @@ class Sj4webRelancepanier extends Module
         // Actions
         if (Tools::isSubmit('sj4web_rp_rotate_key')) {
             $this->rotateKey();
-            $this->confirmations[] = $this->l('A new encryption key has been generated. Previous key kept for compatibility.');
+            $this->confirmations[] = $this->trans('A new encryption key has been generated. Previous key kept for compatibility.', [], 'Modules.Sj4webrelancepanier.Admin');
         }
         if (Tools::isSubmit('sj4web_rp_clear_prev')) {
             $this->clearPrevKey();
-            $this->confirmations[] = $this->l('Previous key cleared.');
+            $this->confirmations[] = $this->trans('Previous key cleared.', [], 'Modules.Sj4webrelancepanier.Admin');
         }
 
         // Lecture
@@ -142,34 +142,34 @@ class Sj4webRelancepanier extends Module
         // Form
         $fields_form = [
             'form' => [
-                'legend' => ['title' => $this->l('Unsubscribe encryption keys')],
+                'legend' => ['title' => $this->trans('Unsubscribe encryption keys', [], 'Modules.Sj4webrelancepanier.Admin')],
                 'input'  => [
                     [
                         'type' => 'text',
-                        'label' => $this->l('Current key'),
+                        'label' => $this->trans('Current key', [], 'Modules.Sj4webrelancepanier.Admin'),
                         'name' => 'sj4web_rp_key_current',
                         'readonly' => true,
-                        'desc' => $this->l('Used to encrypt new unsubscribe links.'),
+                        'desc' => $this->trans('Used to encrypt new unsubscribe links.', [], 'Modules.Sj4webrelancepanier.Admin'),
                     ],
                     [
                         'type' => 'text',
-                        'label' => $this->l('Previous key'),
+                        'label' => $this->trans('Previous key', [], 'Modules.Sj4webrelancepanier.Admin'),
                         'name' => 'sj4web_rp_key_previous',
                         'readonly' => true,
-                        'desc' => $this->l('Kept temporarily to accept old links. You can clear it.'),
+                        'desc' => $this->trans('Kept temporarily to accept old links. You can clear it.', [], 'Modules.Sj4webrelancepanier.Admin'),
                     ],
                 ],
-                'submit' => ['title' => $this->l('Back')],
+                'submit' => ['title' => $this->trans('Back', [], 'Modules.Sj4webrelancepanier.Admin')],
                 'buttons' => [
                     [
-                        'title' => $this->l('Generate new key (rotate)'),
+                        'title' => $this->trans('Generate new key (rotate)', [], 'Modules.Sj4webrelancepanier.Admin'),
                         'class' => 'btn btn-primary',
                         'icon'  => 'process-icon-cogs',
                         'type'  => 'submit',
                         'name'  => 'sj4web_rp_rotate_key',
                     ],
                     [
-                        'title' => $this->l('Clear previous key'),
+                        'title' => $this->trans('Clear previous key', [], 'Modules.Sj4webrelancepanier.Admin'),
                         'class' => 'btn btn-default',
                         'icon'  => 'process-icon-eraser',
                         'type'  => 'submit',
@@ -190,7 +190,7 @@ class Sj4webRelancepanier extends Module
         $helper->token = Tools::getAdminTokenLite('AdminModules');
         $helper->fields_value = [
             'sj4web_rp_key_current'  => $curr,
-            'sj4web_rp_key_previous' => $prev !== '' ? $prev : $this->l('(empty)'),
+            'sj4web_rp_key_previous' => $prev !== '' ? $prev : $this->trans('(empty)', [], 'Modules.Sj4webrelancepanier.Admin'),
         ];
 
         return (!empty($this->confirmations)) ?($this->displayConfirmation(implode('<br>', $this->confirmations ?: []))) : ''

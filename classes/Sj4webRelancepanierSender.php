@@ -22,7 +22,7 @@
  */
 
 require_once dirname(__FILE__) . '/Sj4webRelancepanierCrypto.php';
-
+require_once dirname(__FILE__) . '/Sj4webRelancepanierMailHelper.php';
 class Sj4webRelancepanierSender
 {
     public static function sendRelanceEmails(Sj4webRelancepanierCampaign $campaign, int $step, array $cart_ids): int
@@ -30,11 +30,12 @@ class Sj4webRelancepanierSender
         $nb_sent = 0;
         // ---- TEST MODE (à retirer après tests)
         $TEST_MODE = true;
-        $TEST_RECIPIENTS = [
-            'jorge.sj4web@gmail.com',
-            'jmartinscifea@gmail.com',
-            'jorge.martins@sj4web.fr',
-        ];
+//        $TEST_RECIPIENTS = [
+//            'jorge.sj4web@gmail.com',
+//            'jmartinscifea@gmail.com',
+//            'jorge.martins@sj4web.fr',
+//        ];
+        $TEST_RECIPIENTS = [];
         $TEST_MAX = 1;
         $sentCount = 0;
         // -------------------------------------
@@ -47,10 +48,14 @@ class Sj4webRelancepanierSender
             }
 
 
+            $ctx  = Context::getContext();
             $cart = new Cart($id_cart);
             $customer = new Customer($cart->id_customer);
-            if ($TEST_MODE) {
-                $customer = new Customer(1074);
+            $idLang = $cart->id_lang;
+            if($idLang){
+                $local_lang = Language::getLocaleById($idLang);
+            } else {
+                $local_lang = $ctx->language->locale;
             }
 
             if (!Validate::isLoadedObject($customer) || !Validate::isLoadedObject($cart)) {
@@ -60,32 +65,36 @@ class Sj4webRelancepanierSender
             // Génère le lien de désinscription
             $unsubscribe_link = self::getUnsubscribeLink($customer);
 
-            $cart_recover_link = Context::getContext()->link->getPageLink(
+            $cart_recover_link = $ctx->link->getPageLink(
                 'order',
                 null,
                 (int)$cart->getAssociatedLanguage()->getId(),
                 http_build_query([
-                    'step' => 3,
+                    'step' => 1,
                     'recover_cart' => $cart->id,
                     'token_cart' => md5(_COOKIE_KEY_ . 'recover_cart_' . $cart->id),
                 ])
             );
+
+            // Produits (HTML+TXT)
+            $prods = Sj4webRelancepanierMailHelper::buildCartProducts($cart, $ctx, $local_lang);
+
+            // genérer le code de réduction (s'il y a lieu)
+            $discount_code = self::generateDiscountCode($campaign, $customer, $step);
+            $discount_block = Sj4webRelancepanierMailHelper::buildDiscountBlock($discount_code ?: '', $local_lang);
 
             $template_vars = [
                 '{firstname}' => $customer->firstname,
                 '{lastname}' => $customer->lastname,
                 '{cart_link}' => $cart_recover_link,
                 '{unsubscribe_link}' => $unsubscribe_link,
+
+                '{cart_products_html}'  => $prods['html'],
+                '{cart_products_text}'  => $prods['text'],
+
+                // Affichage conditionnel : la ligne "code promo" n'apparaît que si block non vide
+                '{discount_block}'      => $discount_block,
             ];
-
-            // genérer le code de réduction (s'il y a lieu)
-            $discount_code = self::generateDiscountCode($campaign, $customer, $step);
-
-            if ($discount_code) {
-                $template_vars['{discount_code}'] = $discount_code;
-                $template_vars['{discount_value}'] = $campaign->{'percent_time' . $step} . '%';
-            }
-
 
             if ($TEST_MODE) {
                 // désactive l'opt-out réel pendant les tests
@@ -93,22 +102,22 @@ class Sj4webRelancepanierSender
                     $template_vars['{unsubscribe_link}'] .= (strpos($template_vars['{unsubscribe_link}'], '?') !== false ? '&' : '?') . 'error=1';
                 }
                 // route l’e-mail vers l’un des 3 destinataires
-                $toEmail = $TEST_RECIPIENTS[$sentCount % count($TEST_RECIPIENTS)];
+                $toEmail = (count($TEST_RECIPIENTS) &&  isset($TEST_RECIPIENTS[$sentCount % count($TEST_RECIPIENTS)]) ? $TEST_RECIPIENTS[$sentCount % count($TEST_RECIPIENTS)] : $customer->email);
                 $toName = 'SJ4WEB Test #' . ($sentCount + 1);
-                $subject = '[TEST] ' . Context::getContext()->getTranslator()->trans(
+                $subject = '[TEST] ' . $ctx->getTranslator()->trans(
                         'Cart reminder – Step %step%',
                         ['%step%' => $step],
                         'Emails.Subject',
-                        (int)$cart->id_lang
+                        $local_lang
                     );
             } else {
                 $toEmail = $customer->email;
                 $toName = $customer->firstname . ' ' . $customer->lastname;
-                $subject = Context::getContext()->getTranslator()->trans(
+                $subject = $ctx->getTranslator()->trans(
                     'Cart reminder – Step %step%',
                     ['%step%' => $step],
                     'Emails.Subject',
-                    (int)$cart->id_lang
+                    $local_lang
                 );
             }
             $mail_sent = Mail::Send(

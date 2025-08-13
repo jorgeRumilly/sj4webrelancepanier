@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en-US" target-language="en-US" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="unsubscription_confirmed">
+                <source>Unsubscription confirmed</source>
+                <target>Unsubscription confirmed</target>
+            </trans-unit>
+            <trans-unit id="the_email">
+                <source>The email</source>
+                <target>The email</target>
+            </trans-unit>
+            <trans-unit id="has_been_unsubscribed_from_cart_reminder_emails">
+                <source>has been unsubscribed from cart reminder emails.</source>
+                <target>has been unsubscribed from cart reminder emails.</target>
+            </trans-unit>
+            <trans-unit id="unsubscription_error">
+                <source>Unsubscription error</source>
+                <target>Unsubscription error</target>
+            </trans-unit>
+            <trans-unit id="invalid_or_expired_link">
+                <source>Invalid or expired link.</source>
+                <target>Invalid or expired link.</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

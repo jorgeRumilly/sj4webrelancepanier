@@ -129,13 +129,19 @@ class AdminSj4webRelancepanierSentController extends ModuleAdminController
     public function postProcess()
     {
         foreach ([1, 2, 3] as $step) {
-            if (Tools::isSubmit("force_send_step{$step}")) {
+            $k = "force_send_step{$step}";
+            if (Tools::isSubmit($k)) {
                 $this->processForceSendStep($step);
+
+                // PRG: on revient sur le contrôleur SANS le param d’action
+                Tools::redirectAdmin(self::$currentIndex . '&token=' . $this->token);
+                return; // sécurité
             }
         }
+
         if (Tools::getIsset('debug_unsubscribe')) {
             $this->processDebugUnsubscribeLins();
-            return; // on arrête le postProcess pour éviter de continuer avec le rendu de la liste
+            return;
         }
 
         parent::postProcess();

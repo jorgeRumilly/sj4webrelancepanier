@@ -1,5 +1,53 @@
-<p>Bonjour {firstname} {lastname},</p>
-<p>Nous avons remarqué que vous avez laissé des articles dans votre panier.</p>
-<p><a href="{cart_link}">Cliquez ici pour finaliser votre commande</a></p>
-<p>Code promo : {discount_code}</p>
-<p><a href="{unsubscribe_link}">Se désinscrire</a></p>
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <title>Your cart is waiting 🛒</title>
+  </head>
+  <body style="margin:0;padding:0;background:#f5f7fa;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f5f7fa;">
+      <tr>
+        <td align="center" style="padding:24px 12px;">
+          <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:8px;overflow:hidden;font-family:Arial,Helvetica,sans-serif;color:#1f2937;">
+            <tr>
+                <td style="padding:16px 24px;border-bottom:1px solid #e5e7eb;" align="center">
+                    <a href="{shop_url}" target="_blank" style="color: #111827; text-decoration: underline; font-weight: 400;">
+                        <img height="auto" src="{shop_logo}" style="line-height: 100%; -ms-interpolation-mode: bicubic; border: 0; display: block; outline: none; text-decoration: none; height: auto; width: 100%; font-size: 13px; text-align: center;" width="100%" border="0">
+                    </a>
+                </td>
+            </tr>
+            <tr>
+              <td style="padding:24px;">
+                <h1 style="margin:0 0 8px 0;font-size:20px;line-height:28px;color:#111827;">Your cart is waiting 🛒</h1>
+                <p style="margin:0 0 16px 0;font-size:14px;line-height:20px;color:#374151;">Hello {firstname} {lastname},</p>
+                <p style="margin:0 0 20px 0;font-size:14px;line-height:20px;color:#374151;">We noticed you left some items in your cart.</p>
+                
+                <!-- Product list -->
+                <h2 style="margin:0 0 8px 0;font-size:16px;color:#111827;">Your cart</h2>
+                {cart_products_html}
+                
+                <!-- Optional discount block (empty if none) -->
+                <div style="margin:16px 0 0 0;font-size:14px;color:#111827;">{discount_block}</div>
+
+                <!-- CTA -->
+                <div style="margin:24px 0 8px 0;">
+                  <a href="{cart_link}" style="display:inline-block;background:#111827;color:#ffffff;text-decoration:none;padding:12px 18px;border-radius:6px;font-weight:bold;">
+                    Complete my order
+                  </a>
+                </div>
+                <p style="margin:0;font-size:12px;color:#6b7280;">or copy and paste this link: :<br><a href="{cart_link}" style="color:#2563eb;">{cart_link}</a></p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding:16px 24px;border-top:1px solid #e5e7eb;">
+                <p style="margin:0;font-size:12px;color:#6b7280;"><a href="{unsubscribe_link}" style="color:#6b7280;text-decoration:underline;">Unsubscribe</a></p>
+              </td>
+            </tr>
+          </table>
+          <p style="margin:12px 0 0 0;font-size:11px;color:#9ca3af;">© {shop_name}</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

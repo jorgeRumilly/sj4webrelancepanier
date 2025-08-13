@@ -98,6 +98,50 @@
         <source>Campaign must be in draft status to be marked as active.</source>
         <target>Campaign must be in draft status to be marked as active.</target>
       </trans-unit>
+        <trans-unit id="a_new_encryption_key_generated">
+            <source>A new encryption key has been generated. Previous key kept for compatibility.</source>
+            <target>A new encryption key has been generated. Previous key kept for compatibility.</target>
+        </trans-unit>
+        <trans-unit id="previous_key_cleared">
+            <source>Previous key cleared.</source>
+            <target>Previous key cleared.</target>
+        </trans-unit>
+        <trans-unit id="unsubscribe_encryption_keys">
+            <source>Unsubscribe encryption keys</source>
+            <target>Unsubscribe encryption keys</target>
+        </trans-unit>
+        <trans-unit id="current_key">
+            <source>Current key</source>
+            <target>Current key</target>
+        </trans-unit>
+        <trans-unit id="used_to_encrypt_new_unsubscribe_links">
+            <source>Used to encrypt new unsubscribe links.</source>
+            <target>Used to encrypt new unsubscribe links.</target>
+        </trans-unit>
+        <trans-unit id="previous_key">
+            <source>Previous key</source>
+            <target>Previous key</target>
+        </trans-unit>
+        <trans-unit id="kept_temporarily_to_accept_old_links">
+            <source>Kept temporarily to accept old links. You can clear it.</source>
+            <target>Kept temporarily to accept old links. You can clear it.</target>
+        </trans-unit>
+        <trans-unit id="back">
+            <source>Back</source>
+            <target>Back</target>
+        </trans-unit>
+        <trans-unit id="generate_new_key_rotate">
+            <source>Generate new key (rotate)</source>
+            <target>Generate new key (rotate)</target>
+        </trans-unit>
+        <trans-unit id="clear_previous_key">
+            <source>Clear previous key</source>
+            <target>Clear previous key</target>
+        </trans-unit>
+        <trans-unit id="empty">
+            <source>(empty)</source>
+            <target>(empty)</target>
+        </trans-unit>
     </body>
   </file>
 </xliff>

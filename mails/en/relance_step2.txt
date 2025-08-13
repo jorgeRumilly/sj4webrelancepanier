@@ -1,8 +1,12 @@
-Bonjour {firstname} {lastname},
+Hello {firstname} {lastname},
 
-Nous avons remarqué que vous avez laissé des articles dans votre panier.
+Your selection is still available. You can resume your order with one click.
 
-Lien panier : {cart_link}
-Code promo : {discount_code}
+Cart contents:
+{cart_products_text}
 
-Pour ne plus recevoir ces emails : {unsubscribe_link}
+See your cart: {cart_link}
+
+Discount code: {discount_code}
+
+To stop these emails: {unsubscribe_link}

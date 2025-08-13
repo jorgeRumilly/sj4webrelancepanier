@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+    <file source-language="en-US" target-language="en-US" datatype="plaintext" original="file.ext">
+        <body>
+            <trans-unit id="discount_code_label">
+                <source>Discount code: %code%</source>
+                <target>Code promo : %code%</target>
+            </trans-unit>
+            <trans-unit id="product_label">
+                <source>Product</source>
+                <target>Product</target>
+            </trans-unit>
+            <trans-unit id="quantity_label">
+                <source>Qty</source>
+                <target>Qty</target>
+            </trans-unit>
+            <trans-unit id="price_label">
+                <source>Price</source>
+                <target>Price</target>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>
