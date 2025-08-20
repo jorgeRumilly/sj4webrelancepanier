@@ -4,6 +4,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 require_once dirname(__FILE__) . '/classes/Sj4webRelancePanierInstaller.php';
+require_once dirname(__FILE__) . '/classes/Sj4webRelancepanierSent.php';
 
 class Sj4webRelancepanier extends Module
 {
@@ -25,10 +26,6 @@ class Sj4webRelancepanier extends Module
         $this->displayName = $this->trans('SJ4WEB - Cart Reminder', [], 'Modules.Sj4webrelancepanier.Admin');
         $this->description = $this->trans('Automatically reminds customers about abandoned carts with optional discount codes and conversion tracking.', [], 'Modules.Sj4webrelancepanier.Admin');
         $this->ps_versions_compliancy = ['min' => '8.0.0', 'max' => _PS_VERSION_];
-        $this->installMailsSentsTab();
-        if(!$this->isRegisteredInHook('displayBackOfficeHeader')) {
-            $this->registerHook('displayBackOfficeHeader');
-        }
     }
 
     public function install()

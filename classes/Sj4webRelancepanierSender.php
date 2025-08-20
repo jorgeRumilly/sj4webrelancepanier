@@ -36,7 +36,7 @@ class Sj4webRelancepanierSender
 //            'jorge.martins@sj4web.fr',
 //        ];
         $TEST_RECIPIENTS = [];
-        $TEST_MAX = 1;
+        $TEST_MAX = 5;
         $sentCount = 0;
         // -------------------------------------
 
